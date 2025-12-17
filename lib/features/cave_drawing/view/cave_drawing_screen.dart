@@ -33,10 +33,10 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
     final size = MediaQuery.of(context).size;
 
     // === Drawing area aligned to slab; tweak these numbers if needed ===
-    final double drawingTop = 150.h;
-    final double drawingLeft = 32.w;
-    final double drawingRight = size.width.w - 32.w;
-    final double drawingBottom = size.height.h - 260.h;
+    final double drawingTop = 230.h;
+    final double drawingLeft = 90.w;
+    final double drawingRight = size.width.w - 135.w;
+    final double drawingBottom = size.height.h - 160.h;
 
     _drawingAreaRect = Rect.fromLTRB(
       drawingLeft,
