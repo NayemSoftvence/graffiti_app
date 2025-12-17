@@ -8,7 +8,7 @@ class CaveDrawingViewModel extends ChangeNotifier {
   DrawPath? _currentPath;
 
   DrawingTool _selectedTool = DrawingTool.charcoal;
-  MascotState _mascotState = MascotState.pointing;
+  MascotState _mascotState = MascotState.happy;
 
   // ===== Bucket drag state =====
   Offset _bucketPosition = const Offset(0, 0);

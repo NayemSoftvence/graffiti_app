@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../model/drawing_tool.dart';
 
 class ToolButton extends StatelessWidget {
@@ -23,14 +24,16 @@ class ToolButton extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(10),
+        padding: EdgeInsets.symmetric(horizontal: 5.sp, vertical: 9.sp),
         decoration: BoxDecoration(
-          color: isActive ? Colors.orange.shade200 : Colors.transparent,
+          color: isActive
+              ? const Color.fromARGB(255, 210, 158, 78).withValues(alpha: 0.1)
+              : Colors.transparent,
           shape: BoxShape.circle,
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: Colors.orange.withOpacity(0.6),
+                    color: Colors.orange.withValues(alpha: 0.1),
                     blurRadius: 8,
                   ),
                 ]

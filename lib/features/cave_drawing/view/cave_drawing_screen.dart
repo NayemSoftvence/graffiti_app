@@ -21,7 +21,6 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
   @override
   void initState() {
     super.initState();
-    // init done after first frame so MediaQuery is available
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final size = MediaQuery.of(context).size;
       context.read<CaveDrawingViewModel>().onScreenLoaded(size);
@@ -33,11 +32,11 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
     final vm = context.watch<CaveDrawingViewModel>();
     final size = MediaQuery.of(context).size;
 
-    // === Define drawing area (must match visually with slab) ===
-    final double drawingTop = 150.h; // tune if needed
+    // === Drawing area aligned to slab; tweak these numbers if needed ===
+    final double drawingTop = 150.h;
     final double drawingLeft = 32.w;
-    final double drawingRight = size.width - 32.w;
-    final double drawingBottom = size.height - 260.h;
+    final double drawingRight = size.width.w - 32.w;
+    final double drawingBottom = size.height.h - 260.h;
 
     _drawingAreaRect = Rect.fromLTRB(
       drawingLeft,
@@ -49,7 +48,7 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // 🪨 Cave background with slab
+          // Background
           Positioned.fill(
             child: Image.asset(
               'assets/backgrounds/stone_wall.png',
@@ -57,7 +56,7 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
             ),
           ),
 
-          // 🔝 Title
+          // Title
           Positioned(
             top: 40.h,
             left: 20.w,
@@ -80,7 +79,7 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
             ),
           ),
 
-          // ✏️ Drawing area (clipped to slab)
+          // Drawing area
           Positioned(
             top: drawingTop,
             left: drawingLeft,
@@ -100,10 +99,10 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
             ),
           ),
 
-          // 🎨 Individual tools (left side)
+          // LEFT tools
           Positioned(
-            left: 10.w,
-            top: 0,
+            left: 0.w,
+            top: 35.h,
             bottom: 0,
             child: SizedBox(
               width: 80.w,
@@ -112,7 +111,7 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
                 children: [
                   Positioned(
                     left: 0,
-                    top: 260.h,
+                    top: 270.h,
                     child: ToolButton(
                       tool: DrawingTool.charcoal,
                       selectedTool: vm.selectedTool,
@@ -138,10 +137,10 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
             ),
           ),
 
-          // 🎨 Individual tools (right side)
+          // RIGHT tools
           Positioned(
-            right: 10.w,
-            top: 0,
+            right: 0.w,
+            top: 40.h,
             bottom: 0,
             child: SizedBox(
               width: 80.w,
@@ -150,7 +149,7 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
                 children: [
                   Positioned(
                     right: 0,
-                    top: 260.h,
+                    top: 270.h,
                     child: ToolButton(
                       tool: DrawingTool.ochre,
                       selectedTool: vm.selectedTool,
@@ -176,14 +175,22 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
             ),
           ),
 
-          // 🧸 Mascot on right side
-          const _RightSideMascot(),
-
-          // 🔘 Continue button (center bottom)
+          // Mascot on the right side
           Positioned(
-            bottom: 110.h,
-            left: 60.w,
-            right: 60.w,
+            right: -30.w,
+            bottom: 100.h,
+            child: SizedBox(
+              width: 150.w,
+              height: 150.w,
+              child: const MascotWidget(),
+            ),
+          ),
+
+          // Continue button
+          Positioned(
+            bottom: 70.h,
+            left: 70.w,
+            right: 70.w,
             child: GestureDetector(
               onTap: vm.canContinue ? vm.onContinue : null,
               child: Image.asset(
@@ -195,10 +202,10 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
             ),
           ),
 
-          // 🔊 Replay Sounds (left bottom)
+          // Replay Sounds (left bottom)
           Positioned(
             bottom: 32.h,
-            left: 50.w,
+            left: 10.w,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -230,7 +237,7 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
             ),
           ),
 
-          // 🪣 Draggable Clear Wall bucket
+          // Draggable Clear Wall bucket
           Positioned(
             left: vm.bucketPosition.dx - 40.w,
             top: vm.bucketPosition.dy - 40.w,
@@ -251,7 +258,7 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
             ),
           ),
 
-          // Label for Clear Wall (static text)
+          // Label for Clear Wall
           Positioned(
             bottom: 32.h,
             right: 60.w,
@@ -266,21 +273,6 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
           ),
         ],
       ),
-    );
-  }
-}
-
-/// Positions the existing MascotWidget on the right side,
-/// roughly like the reference mockup.
-class _RightSideMascot extends StatelessWidget {
-  const _RightSideMascot();
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      right: 20.w,
-      bottom: 130.h,
-      child: SizedBox(width: 160.w, height: 160.w, child: const MascotWidget()),
     );
   }
 }

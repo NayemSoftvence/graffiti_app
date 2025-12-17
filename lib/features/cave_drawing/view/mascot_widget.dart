@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -12,14 +13,10 @@ class MascotWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<CaveDrawingViewModel>().mascotState;
 
-    return Positioned(
-      bottom: 120,
-      left: 20,
-      child: SizedBox(
-        width: 140,
-        height: 140,
-        child: Lottie.asset(_assetForState(state)),
-      ),
+    return SizedBox(
+      width: 140.w,
+      height: 140.h,
+      child: Lottie.asset(_assetForState(state)),
     );
   }
 
