@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/draw_path.dart';
+import '../model/draw_path.dart';
 
 class GraffitiPainter extends CustomPainter {
   final List<DrawPath> paths;

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import 'controllers/drawing_controller.dart';
-import 'screens/drawing_screen.dart';
+import 'features/cave_drawing/view/cave_drawing_screen.dart';
+import 'features/cave_drawing/viewmodel/cave_drawing_vm.dart';
 
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (_) => DrawingController(),
+      create: (_) => CaveDrawingViewModel(),
       child: const GraffitiApp(),
     ),
   );
@@ -18,9 +19,13 @@ class GraffitiApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const DrawingScreen(),
+    return ScreenUtilInit(
+      designSize: const Size(375, 812), // your base design size
+      minTextAdapt: true,
+      builder: (context, child) {
+        return MaterialApp(debugShowCheckedModeBanner: false, home: child);
+      },
+      child: const CaveDrawingScreen(),
     );
   }
 }
