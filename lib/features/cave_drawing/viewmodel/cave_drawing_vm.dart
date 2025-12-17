@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../model/draw_path.dart';
 import '../model/drawing_tool.dart';
 import '../model/mascot_state.dart';
@@ -85,8 +86,8 @@ class CaveDrawingViewModel extends ChangeNotifier {
     // if bucket overlaps drawing area -> clear
     final bucketRect = Rect.fromCenter(
       center: _bucketPosition,
-      width: 80,
-      height: 80,
+      width: 80.w,
+      height: 80.h,
     );
 
     if (bucketRect.overlaps(drawingAreaRect) && _paths.isNotEmpty) {
@@ -137,8 +138,8 @@ class CaveDrawingViewModel extends ChangeNotifier {
           ..strokeJoin = StrokeJoin.round;
       case DrawingTool.feather:
         return Paint()
-          ..color = Colors.brown.withOpacity(0.35)
-          ..strokeWidth = 12
+          ..color = Colors.brown.withValues(alpha: .35)
+          ..strokeWidth = 2
           ..style = PaintingStyle.stroke
           ..strokeCap = StrokeCap.round
           ..strokeJoin = StrokeJoin.round;

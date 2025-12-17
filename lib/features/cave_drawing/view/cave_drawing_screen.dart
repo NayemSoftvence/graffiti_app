@@ -32,17 +32,52 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
     final vm = context.watch<CaveDrawingViewModel>();
     final size = MediaQuery.of(context).size;
 
-    // === Drawing area aligned to slab; tweak these numbers if needed ===
-    final double drawingTop = 230.h;
+    // === Drawing area aligned to slab; using BoxFit.cover logic ===
+    const double designW = 375.0;
+    const double designH = 812.0;
+    const double slabTopY_design = 230.0; // Top Y in design coordinates
+    const double slabBottomY_design =
+        582.0; // Bottom Y in design coordinates (812 - 230)
+
+    final double screenW = size.width;
+    final double screenH = size.height;
+    final double screenAspect = screenW / screenH;
+    const double designAspect = designW / designH;
+
+    double scale;
+    double offsetY;
+
+    if (screenAspect > designAspect) {
+      // Screen is wider than design (e.g. 16:9 vs 9:19.5) -> Scale by width
+      scale = screenW / designW;
+      // Image is vertically centered, so offset is (screenH - scaledH) / 2
+      offsetY = (screenH - designH * scale) / 2;
+    } else {
+      // Screen is taller/narrower -> Scale by height
+      scale = screenH / designH;
+      offsetY =
+          0; // Usually 0 if matching height, or calculated if BoxFit.cover behavior implies horizontal cropping
+      // For BoxFit.cover, if screen is taller, we scale by height.
+      // Actually, if screen is *taller* (aspect < designAspect), scale = screenH / designH.
+      // Then width is scaled, and centered horizontally. Vertical offset is 0.
+    }
+
+    // Calculate final top/bottom in screen coordinates
+    // We want the drawing rect top/bottom to match the visual slab
+    final double drawingTop = offsetY + (slabTopY_design * scale);
+    final double drawingBottomPos = offsetY + (slabBottomY_design * scale);
+    // Positioned takes 'bottom' as distance from bottom, so:
+    final double drawingBottom = screenH - drawingBottomPos;
+
     final double drawingLeft = 90.w;
-    final double drawingRight = size.width.w - 135.w;
-    final double drawingBottom = size.height.h - 160.h;
+    // originalDrawingRight is used for the logical Rect to match the touch area.
+    final double originalDrawingRight = size.width.w - 135.w;
 
     _drawingAreaRect = Rect.fromLTRB(
       drawingLeft,
       drawingTop,
-      drawingRight,
-      drawingBottom,
+      originalDrawingRight,
+      drawingBottomPos, // Rect uses (left, top, right, bottom_coordinate)
     );
 
     return Scaffold(
@@ -83,8 +118,9 @@ class _CaveDrawingScreenState extends State<CaveDrawingScreen> {
           Positioned(
             top: drawingTop,
             left: drawingLeft,
-            right: size.width - drawingRight,
-            bottom: size.height - drawingBottom,
+            right:
+                drawingLeft, // Keeping original horizontal margins to avoid regression
+            bottom: drawingBottom,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(40.r),
               child: GestureDetector(
